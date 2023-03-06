@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto mt-5">
+            <h3 class="text-center mb-4">Register</h3>
+            <form action="/register" method="post" id="register-form">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <div class="invalid-feedback">Please provide a valid email address.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                    <div class="invalid-feedback">Please provide a username.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div class="invalid-feedback">Please provide a name between 5 and 40 characters.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="invalid-feedback">Please provide a password between 5 and 40 characters.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password2" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="password2" name="password2" required>
+                    <div class="invalid-feedback">Passwords do not match.</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+      $('#register-form').submit(function(event) {
+        var email = $('#email').val();
+        var username = $('#username').val();
+        var name = $('#name').val();
+        var password = $('#password').val();
+        var password2 = $('#password2').val();
+        var isValid = true;
+        $('.is-invalid').removeClass('is-invalid');
+        if (!isValidEmail(email)) {
+          $('#email').addClass('is-invalid');
+          $('#email + .invalid-feedback').show();
+          isValid = false;
+        }
+        if (!isValidName(name)) {
+          $('#name').addClass('is-invalid');
+          $('#name + .invalid-feedback').show();
+          isValid = false;
+        }
+        if (!isValidPassword(password)) {
+          $('#password').addClass('is-invalid');
+          $('#password + .invalid-feedback').show();
+      isValid = false;
+    }
+    if (password !== password2) {
+      $('#password2').addClass('is-invalid');
+      $('#password2 + .invalid-feedback').show();
+      isValid = false;
+    }
+    if (!isValid) {
+      event.preventDefault();
+    }
+  });
+
+  function isValidEmail(email) {
+    // Regex for email validation
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  function isValidName(name) {
+    // Name length validation
+    return name.length >= 5 && name.length <= 40;
+  }
+
+  function isValidPassword(password) {
+    // Password length validation
+    return password.length >= 5 && password.length <= 40;
+  }
+});
+
+</script>
+</body>
+</html>
