@@ -13,6 +13,7 @@ public class AppUserDetails implements UserDetails {
 
     private User user;
 
+
     public AppUserDetails(User user){
         super();
         this.user = user;
@@ -34,6 +35,11 @@ public class AppUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -53,4 +59,5 @@ public class AppUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

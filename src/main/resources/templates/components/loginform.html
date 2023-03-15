@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row mt-5 justify-content-center">
     <div class="col-md-6">
       <h1 class="text-center mb-4">Login Form</h1>
@@ -14,6 +14,7 @@
         <div class="d-grid gap-2 mb-3">
           <button type="submit" class="btn btn-primary">Login</button>
         </div>
+        <div th:if="${errorText}"  th:text="${errorText}" class="alert alert-danger mt-3" role="alert"></div>
       </form>
     </div>
   </div>

@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="row">
         <div class="col-md-6 mx-auto mt-5">
             <h3 class="text-center mb-4">Register</h3>
-            <form action="/register" method="post" id="register-form">
+            <form action="/createUser" method="post" id="register-form">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required>
@@ -29,7 +29,11 @@
                     <div class="invalid-feedback">Passwords do not match.</div>
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button>
+
+                <div th:if="${errorText}"  th:text="${errorText}" class="alert alert-danger mt-3" role="alert">
+                </div>
             </form>
+
         </div>
     </div>
 </div>

@@ -12,6 +12,15 @@ public class User {
     private String email;
     private String type;
     private String password;
+    private String pfp;
+
+    public String getPfp() {
+        return pfp;
+    }
+
+    public void setPfp(String pfp) {
+        this.pfp = pfp;
+    }
 
     public Long getId() {
         return id;

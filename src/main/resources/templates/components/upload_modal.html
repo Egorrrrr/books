@@ -1,10 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Загрузить книгу</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <label for="fileInput">Книга:</label>
+                <input type="file" id="fileInput" accept=".fb2" style="display: none;">
+                <div id="dropZone">
+                    Перетащить .fb2 файл сюда
+                </div>
+                <h5 id="file_selected"></h5>
+                <!-- Text Input -->
+                <label for="textInput">Введите название:</label>
+                <input type="text" class="form-control" id="textInput">
+                <label for="descInput">Введите описание:</label>
+                <input type="text" class="form-control" id="descInput">
+                <!-- Option List -->
+                <label for="optionList">Выберите жанр:</label>
+                <select  class="form-control" id="optionList" multiple>
+                    <option th:each="genre: ${genres}" th:text="${genre.name}" th:value="${genre.id}"></option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="sendButton" disabled>Отправить</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #dropZone {
+  color: #ccc;
+  border-style: dashed;
+  border-color: #ccc;
+  line-height: 200px;
+  text-align: center
+}
+#dropZone.drop {
+  color: #222;
+  border-color: #222;
+}
+</style>
+    <script>
+  // Drag and Drop File Input
+  let dropZone = document.getElementById('dropZone');
+  let fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.remove('dragover');
+         let files = e.dataTransfer.files;
+    fileInput.files = files;
+    checkForm();
+  });
+
+  // Check Form
+   function checkForm() {
+    let textInput = document.getElementById('textInput');
+    let optionList = document.getElementById('optionList');
+    let sendButton = document.getElementById('sendButton');
+    if(fileInput.files.length > 0){
+        document.getElementById("file_selected").innerHTML = fileInput.files[0].name
+    }
+    if (fileInput.files.length > 0 && textInput.value !== '' && optionList.value !== '') {
+      sendButton.disabled = false;
+
+    } else {
+      sendButton.disabled = true;
+    }
+  }
+
+  // Send Form Data
+  function sendFormData() {
+    let textInput = document.getElementById('textInput');
+    let descInput = document.getElementById('descInput');
+    let optionList = document.getElementById('optionList');
+    let values = Array.from(optionList.selectedOptions).map(option => option.value);
+    let formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('name', textInput.value);
+    formData.append('description', descInput.value);
+    formData.append('genres', values);
+
+    fetch('/upload_book', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.error(error));
+  }
+
+  // Send Button
+  let sendButton = document.getElementById('sendButton');
+  sendButton.addEventListener('click', sendFormData);
+
+  // Text Input and Option List
+  let textInput = document.getElementById('textInput');
+  let optionList = document.getElementById('optionList');
+
+  textInput.addEventListener('input', checkForm);
+  optionList.addEventListener('change', checkForm);
+</script>

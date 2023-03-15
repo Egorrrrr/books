@@ -1,2 +1,4 @@
-package com.me.books.repos;public interface CommentRepository {
+package com.me.books.repos;
+
+public interface CommentRepository {
 }

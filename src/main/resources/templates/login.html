@@ -8,7 +8,8 @@
 <body>
 <header th:insert="components/header">
 </header>
-<main th:insert="components/loginform">
+<!-- WRONG!!!! -->
+<main th:insert="components/loginform" th:with="errorText=${message}">
 </main>
 <script th:insert="components/bootscript"></script>
 </body>

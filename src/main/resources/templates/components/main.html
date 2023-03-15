@@ -1,41 +1,17 @@
-<div class="container-fluid">
+<div class="container-fluid" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row">
-    <div class="col-12 col-md-2 bg-light mt-3">
-      <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Option
-          1</a>
-        <a href="#" class="list-group-item list-group-item-action">Option 2</a>
-        <a href="#" class="list-group-item list-group-item-action">Option 3</a>
-        <a href="#" class="list-group-item list-group-item-action">Option 4</a>
+    <div class="col-12 col-md-2 bg-light mt-3 position-relative sidebar d-flex flex-column">
+      <div th:each="genre: ${genres}" class="list-group scrollable-list">
+        <a href="#" class="list-group-item list-group-item-action" th:text="${genre.name}" aria-current="true"></a>
       </div>
     </div>
     <div class="col-12 col-md-9">
-      <div class="row">
-        <div class="col-12 col-lg-3 my-3">
+      <div th:each="book : ${books}" class="row">
+        <div class="col-12  my-3">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Card 1</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                eget massa a ipsum imperdiet euismod ut a sapien.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-3 my-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Card 2</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                eget massa a ipsum imperdiet euismod ut a sapien.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-3 my-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Card 3</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                eget massa a ipsum imperdiet euismod ut a sapien.</p>
-
+              <a th:href="@{'book/'+${book.id}}"><h5 class="card-title" th:text="${book.name}"></h5></a>
+              <p class="card-text" th:text="${book.description}"></p>
             </div>
           </div>
         </div>
@@ -43,3 +19,14 @@
     </div>
   </div>
 </div>
+<style>
+    .sidebar{
+      height:90vh;
+      max-height: 90vh;
+    }
+    .scrollable-list {
+        max-height: 85%;
+        overflow-y: auto;
+    }
+
+</style>
