@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Set;
 
@@ -26,10 +27,13 @@ public class DefaultController {
     BookService bookService;
 
     @GetMapping(value = {"/", "/main"})
-    public String mainPage(Model model) {
+    public String mainPage(@RequestParam(required=false) Genre genre, Model model) {
         User user = authService.getUserFromAuth();
-        model.addAttribute("books", bookService.getBooks(0));
+        model.addAttribute("books",
+                genre == null ? bookService.getBooks(0) : bookService.getBooksByGenre(genre));
         model.addAttribute("genres", genreService.getGenres());
+
+        model.addAttribute("selected_genre", genre != null ?  genre.getId() : "");
         if(user == null){
             return "main";
         }

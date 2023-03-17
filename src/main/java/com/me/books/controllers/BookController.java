@@ -31,6 +31,12 @@ public class BookController {
         return "book";
     }
 
+    @GetMapping("/read/{id}/{chapter}")
+    public String readBook(@PathVariable("id") long id, @PathVariable("chapter") long chapter, Model model){
+        model.addAttribute("book", bookService.getBookById(id));
+        return "book";
+    }
+
     @PostMapping("/upload_book")
     public String handleFileUpload(Book book) throws ParserConfigurationException, IOException, SAXException, TransformerException {
          bookService.addBook(book, authService.getUserFromAuth());

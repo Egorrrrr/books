@@ -33,7 +33,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Service
-public class BookService{
+public class BookService {
     @Autowired
     GenreRepository genreRepository;
     @Autowired
@@ -41,34 +41,45 @@ public class BookService{
     @Autowired
     FileService fileService;
     private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    public List<Genre> getGenres(){
+
+    public List<Genre> getGenres() {
+
         return genreRepository.findAll();
     }
+
     public String addBook(Book book, User user) throws ParserConfigurationException, IOException, SAXException, TransformerException {
         DocumentBuilder dBuilder = dbf.newDocumentBuilder();
         Document doc = dBuilder.parse(book.getFile().getInputStream());
         NodeList nodeList = doc.getElementsByTagName("section");
-        book.setPath(String.format("%s/%s/%s",FileService.BOOK_STORAGE, user.getId(), book.getName()));
+        book.setPath(String.format("%s/%s/%s", FileService.BOOK_STORAGE, user.getId(), book.getName()));
         book.setUploader(user);
-        for (int i = 0; i < nodeList.getLength(); i++){
+        for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            fileService.uploadBook(user.getId(), book.getName(), i,innerXml(node).getBytes(StandardCharsets.UTF_8));
+            fileService.uploadBook(user.getId(), book.getName(), i, innerXml(node).getBytes(StandardCharsets.UTF_8));
         }
         bookRepository.save(book);
         return "";
     }
-    public Book getBookById(long id){
+
+    public Book getBookById(long id) {
         return bookRepository.getReferenceById(id);
     }
-    public List<Book> getBooks(long amount){
-        if(amount > 0){
+
+    public List<Book> getBooksByGenre(Genre genre) {
+        return bookRepository.findByGenres(genre);
+
+    }
+
+    public List<Book> getBooks(long amount) {
+        if (amount > 0) {
             return bookRepository.findAll(Pageable.ofSize((int) amount)).stream().toList();
         }
         return bookRepository.findAll();
 
     }
+
     private String innerXml(Node node) {
-        DOMImplementationLS lsImpl = (DOMImplementationLS)node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+        DOMImplementationLS lsImpl = (DOMImplementationLS) node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
         LSSerializer lsSerializer = lsImpl.createLSSerializer();
         NodeList childNodes = node.getChildNodes();
         StringBuilder sb = new StringBuilder();

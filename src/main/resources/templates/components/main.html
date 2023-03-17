@@ -1,8 +1,8 @@
 <div class="container-fluid" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row">
     <div class="col-12 col-md-2 bg-light mt-3 position-relative sidebar d-flex flex-column">
-      <div th:each="genre: ${genres}" class="list-group scrollable-list">
-        <a href="#" class="list-group-item list-group-item-action" th:text="${genre.name}" aria-current="true"></a>
+      <div class="list-group scrollable-list">
+        <a th:each="genre: ${genres}" th:href="@{'/main?genre='+${genre.id}}" class="list-group-item list-group-item-action" th:classappend="(${genre.id} eq ${selected_genre}) ? active"  th:text="${genre.name}" aria-current="true"></a>
       </div>
     </div>
     <div class="col-12 col-md-9">
