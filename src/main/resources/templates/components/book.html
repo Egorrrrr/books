@@ -1,28 +1,56 @@
+<script>
+    function send(e){
+    let formData = new FormData();
+    formData.append('book', parseInt(document.getElementById('bookId').innerHTML))
+    formData.append('text', document.getElementById('comment').value)
+
+            fetch('/post_comment', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response)
+    .then(data => {
+        if(data.status==403){
+        window.location.href = "/login"
+        }
+        else{
+            var username = document.getElementById("username").innerHTML;
+            document.getElementById("comment_list").innerHTML += `<li class="list-group-item">${username}: ${document.getElementById('comment').value}</li>`
+            document.getElementById('comment').value = ""
+        }
+      console.log()
+    });
+    }
+</script>
+
 <div class="container mt-2" style="width: 80%;" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="row">
         <div class="col-md-4">
             <img src="https://itswapps.files.wordpress.com/2013/06/btxtlimit.jpg" alt="Image" class="img-fluid myimg">
             <h5 th:text="@{'Загрзуил: '+${book.uploader.username}}"></h5>
-            <button type="button" class="btn btn-primary">Читать</button>
+            <a th:href="@{'/read/'+${book.id}+'/0'}" type="button" class="btn btn-primary">Читать</a>
         </div>
         <div class="col-md-6">
+            <h3 id="bookId" th:text="${book.id}" style="display:none;" ></h3>
             <h3 th:text="${book.name}" ></h3>
             <p class="text-break" th:text="${book.description}"></p>
-            <button type="button" class="btn btn-primary">Like</button>
-            <button type="button" class="btn btn-secondary">Dislike</button>
+            <div class="align-self-end">
+                <button type="button" class="btn btn-primary">Like</button>
+                <button type="button" class="btn btn-secondary">Dislike</button>
+            </div>
+
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-md-12">
             <h4>Comments</h4>
-            <ul class="list-group mb-2">
-                <li class="list-group-item">Comment 1: Lorem ipsum dolor sit amet...</li>
-                <li class="list-group-item">Comment 2: Consectetur adipiscing elit...</li>
-                <li class="list-group-item">Comment 3: Sed do eiusmod tempor incididunt...</li>
+            <ul id="comment_list" class="list-group mb-2">
+                <li th:each="comment : ${comments}" th:text="@{${comment.user.name}+': '+${comment.text}}" class="list-group-item">Comment 1: Lorem ipsum dolor sit amet...</li>
+
             </ul>
 
-            <textarea class="form-control mb-2"></textarea>
-            <button type="button" class="btn btn-success">Send</button>
+            <textarea id="comment" class="form-control mb-2"></textarea>
+            <button onclick="send(this)" type="button" class="btn btn-success">Send</button>
         </div>
     </div>
 </div>

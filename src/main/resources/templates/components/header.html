@@ -20,7 +20,7 @@
             <div th:if="${logged_in}" class="col-12 col-md-3 d-flex justify-content-center align-items-center p-3">
                 <img src="https://wonderdevelop.com/wp-content/uploads/2022/12/Correct-HTML-for-Making-a-Drop-down-List-31.jpg" class="pic rounded-circle" alt="Cinque Terre" width="50" height="50">
                 <button th:if="${logged_in} == true" type="button" data-toggle="modal" data-target="#myModal" class="btn btn-success m-2">Загрузить книгу</button>
-                <a  th:href="@{/login}" th:text="${user.username}" class="btn btn-primary m-2"></a>
+                <a  th:href="@{/login}" id="username" th:text="${user.username}" class="btn btn-primary m-2"></a>
                 <a th:href="@{/logout}" class="btn btn-danger">Выйти</a>
             </div>
         </div>

@@ -20,6 +20,8 @@ public class Book {
 
     private String description;
 
+    private int chapterCount;
+
     private Long size;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -96,5 +98,13 @@ public class Book {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public int getChapterCount() {
+        return chapterCount;
+    }
+
+    public void setChapterCount(int chapterCount) {
+        this.chapterCount = chapterCount;
     }
 }

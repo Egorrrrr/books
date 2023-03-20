@@ -1,25 +1,81 @@
-<div class="container">
+<script>
+    var pageNumber = 0
+    var pages = {0:""}
+    window.addEventListener("DOMContentLoaded", (event) => {
+      var el = document.getElementById("content").getElementsByTagName("p")
+      var i = 0
+      var j = 0
+      for (var i = 0; i < el.length; i++) {
+        pages[j] += el[i].innerHTML + "\n"
+        if (pages[j].split(" ").length > 250) {
+          j++;
+          pages[j]=""
+        }
+      }
+      document.getElementById("prev").style.opacity = 0;
+      const keys = Object.keys(pages);
+      if(keys.length == 1)
+              document.getElementById("next").style.opacity = 0;
+      document.getElementById("content").innerHTML = pages[0]
+      document.getElementById("content").style.display = "block"
+
+    });
+    function n(e){
+      const keys = Object.keys(pages);
+      if(pageNumber+1 < keys.length) {
+        console.log("Dsad")
+        document.getElementById("content").innerHTML = pages[++pageNumber]
+        document.getElementById("prev").style.opacity = 100;
+        if(pageNumber == keys.length-1){
+          e.style.opacity = 0;
+        }
+      }
+    }
+    function p(e){
+    const keys = Object.keys(pages);
+      if(pageNumber-1 >= 0) {
+        document.getElementById("content").innerHTML = pages[--pageNumber]
+        document.getElementById("next").style.opacity = 100;
+        if(pageNumber == 0){
+          e.style.opacity = 0;
+        }
+      }
+    }
+  </script>
+<div class="container" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row">
     <div class="col-12 text-center">
-      <h2>Book Title</h2>
-      <h4>Chapter Title</h4>
+      <h2 th:utext="${book.name}"></h2>
+      <h4 th:text="${chapter.title}"></h4>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       <div class="d-flex justify-content-between">
-        <button class="btn btn-secondary align-self-center m-4 h-25 pagebt">←</button>
-        <div>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla corrupti consectetur nam obcaecati, perspiciatis impedit, a sequi reprehenderit ut dolores numquam sapiente optio fugit explicabo tenetur in tempore! Perferendis enim ratione nulla nesciunt quae sequi aliquam dolore voluptatem rerum, ab exercitationem ea, et veniam alias sapiente odio fugiat quo distinctio laudantium at. Officiis similique doloribus, a ipsum ea ipsam sint, dolor iusto odit eius voluptas in placeat quis corrupti eum consectetur rem cumque qui neque amet facilis aliquam voluptatibus. Eos dolor pariatur est. Voluptas, doloribus minus, explicabo ipsa quo porro provident numquam voluptate quae soluta ratione asperiores nemo. Nulla laudantium tempora facilis dolores maiores cum magnam odio expedita amet illum modi numquam, nam repudiandae neque quos? Eaque accusantium itaque provident, laudantium ullam enim quas, voluptatibus placeat molestias sequi eius mollitia, reiciendis vitae nam voluptatum maiores sapiente eum totam. Quod pariatur voluptatibus non saepe qui tempora tenetur aperiam iure. Aut, eveniet magnam doloribus impedit odio veritatis ex suscipit voluptatibus molestias dolorem? Porro reiciendis nulla facere harum. Mollitia libero tenetur inventore nihil iste quo non quod voluptatibus animi quisquam excepturi recusandae soluta hic in error rem vero, repudiandae optio praesentium officiis id. Beatae sequi qui consequatur impedit perspiciatis fuga quidem vel consectetur tempore? Fugiat doloremque sequi nulla aliquam quis cum suscipit at fugit impedit vitae facilis culpa, in repellendus soluta alias sint. Aut officiis eum, explicabo exercitationem dolor ut nemo cum laboriosam cupiditate, voluptas assumenda iusto dolores nisi? Et doloremque nihil eligendi quos dolorum nisi non reprehenderit dolore molestiae eveniet consectetur rerum facilis est, iure esse libero. Sit, harum voluptates error accusamus voluptatibus quisquam tempore iste laboriosam ad iure assumenda? Est ea obcaecati, neque sit ipsa consectetur quidem id culpa impedit porro placeat pariatur, quia rem veritatis reiciendis quibusdam! Delectus eligendi accusamus dignissimos at, numquam quam magni repellendus corrupti rem asperiores earum vel ea inventore consequuntur, officiis laboriosam fugiat quo, quas eos. Culpa facere nam voluptatem accusamus harum a perferendis inventore dolores reiciendis rem, deserunt eum nulla eius natus numquam quod in debitis commodi illum fuga quidem ut quasi. Accusamus aliquam quam animi, nihil amet commodi iusto beatae et quis perspiciatis consequatur natus, ipsam quos? Excepturi vel maiores dolorum, commodi consequatur quae eos aliquid placeat obcaecati officiis nemo eligendi in. Vel aspernatur laboriosam veritatis, est dolor sit facere fugiat laudantium aperiam iste adipisci! Vero rerum optio, minima doloremque obcaecati tempore dolor sint. Voluptate mollitia sequi deserunt assumenda ipsa, rem facere nobis perspiciatis dolore vitae voluptas sint ullam maiores voluptates voluptatum repellat minus cum animi est temporibus dolores harum quos porro vero. Ad exercitationem, officiis illum et dicta nam maxime? Dolorum suscipit ratione placeat illo quasi ab quam cupiditate atque delectus repudiandae. Perspiciatis magni aut quos voluptas dolorem ea ratione ducimus, neque provident obcaecati porro, rem non sed doloribus culpa inventore. At provident vero perferendis quas voluptatem quasi quod ab! Reprehenderit minus reiciendis laudantium tempore sed facere deserunt vero tenetur quis temporibus, quisquam doloremque vel expedita et tempora. Ab pariatur laborum saepe? Debitis qui fuga vel necessitatibus numquam. Dicta impedit aut perferendis esse?</div>
-        <button class="btn btn-secondary align-self-center m-3 h-25 pagebt">→</button>
+        <button onclick="p(this)" id="prev" class="btn btn-secondary align-self-center m-4 h-25 pagebt">←</button>
+        <div style="display: none" id="content"  th:utext="${chapter.content}"></div>
+        <button onclick="n(this)" id="next"  class="btn btn-secondary align-self-center m-3 h-25 pagebt">→</button>
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-6 text-center">
-      <button class="btn btn-primary">Следующая глава</button>
+      <a th:if="${p_link}" th:href="${p_link}" class="btn btn-primary">Преведущая глава</a>
     </div>
     <div class="col-6 text-center">
-      <button class="btn btn-primary">Преведущая глава</button>
+      <a th:if="${n_link}" th:href="${n_link}" class="btn btn-primary">Следующая глава</a>
     </div>
   </div>
 </div>
+
+<style>
+  .pagebt {
+    height: 50px;
+    width: 3000px;
+    max-width: 100px;
+  }
+  #content{
+    max-width: 750px;
+    min-height: 700px;
+  }
+</style>

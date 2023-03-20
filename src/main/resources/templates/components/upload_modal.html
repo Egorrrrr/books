@@ -105,8 +105,10 @@
       method: 'POST',
       body: formData
     })
-      .then(response => response.text())
-      .then(result => console.log(result))
+      .then(response => response)
+      .then(result => {
+        window.location.href = "/main"
+      })
       .catch(error => console.error(error));
   }
 

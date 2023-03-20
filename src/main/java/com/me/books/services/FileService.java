@@ -32,4 +32,10 @@ public class FileService {
         Files.write(Path.of(dir), filesBytes);
         return dir;
     }
+
+    public String loadChapter(int chapterId, String path) throws IOException {
+        return Files.readString(Path.of(new StringBuilder(path).append("/").append(chapterId).toString()));
+
+
+    }
 }
