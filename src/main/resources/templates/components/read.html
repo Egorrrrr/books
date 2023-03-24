@@ -6,11 +6,18 @@
       var i = 0
       var j = 0
       for (var i = 0; i < el.length; i++) {
-        pages[j] += el[i].innerHTML + "\n"
-        if (pages[j].split(" ").length > 250) {
+      if (pages[j].split(" ").length + el[i].innerHTML.split(" ").length > 250) {
           j++;
           pages[j]=""
+          continue
         }
+        if(i == 0){
+          document.getElementById("c_title").innerHTML = el[i].innerHTML
+        }
+        else{
+          pages[j] += `<p>${el[i].innerHTML}</p>`
+        }
+
       }
       document.getElementById("prev").style.opacity = 0;
       const keys = Object.keys(pages);
@@ -46,7 +53,7 @@
   <div class="row">
     <div class="col-12 text-center">
       <h2 th:utext="${book.name}"></h2>
-      <h4 th:text="${chapter.title}"></h4>
+      <h4 id="c_title" th:text="${chapter.title}"></h4>
     </div>
   </div>
   <div class="row">

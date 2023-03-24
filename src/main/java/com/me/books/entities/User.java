@@ -12,6 +12,8 @@ public class User {
     private String email;
     private String type;
     private String password;
+
+    @Column(columnDefinition = "varchar(1000) default 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png'")
     private String pfp;
 
     public String getPfp() {

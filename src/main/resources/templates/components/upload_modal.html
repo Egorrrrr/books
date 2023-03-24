@@ -19,6 +19,8 @@
                 <input type="text" class="form-control" id="textInput">
                 <label for="descInput">Введите описание:</label>
                 <input type="text" class="form-control" id="descInput">
+                <label for="author">Введите имя автора:</label>
+                <input type="text" class="form-control" id="author">
                 <!-- Option List -->
                 <label for="optionList">Выберите жанр:</label>
                 <select  class="form-control" id="optionList" multiple>
@@ -76,12 +78,13 @@
   // Check Form
    function checkForm() {
     let textInput = document.getElementById('textInput');
+    let textInputAuthor = document.getElementById('author');
     let optionList = document.getElementById('optionList');
     let sendButton = document.getElementById('sendButton');
     if(fileInput.files.length > 0){
         document.getElementById("file_selected").innerHTML = fileInput.files[0].name
     }
-    if (fileInput.files.length > 0 && textInput.value !== '' && optionList.value !== '') {
+    if (fileInput.files.length > 0 && textInput.value !== '' && optionList.value !== '' && textInputAuthor.value != '') {
       sendButton.disabled = false;
 
     } else {
@@ -93,6 +96,7 @@
   function sendFormData() {
     let textInput = document.getElementById('textInput');
     let descInput = document.getElementById('descInput');
+    let author = document.getElementById('author').value;
     let optionList = document.getElementById('optionList');
     let values = Array.from(optionList.selectedOptions).map(option => option.value);
     let formData = new FormData();
@@ -100,6 +104,7 @@
     formData.append('name', textInput.value);
     formData.append('description', descInput.value);
     formData.append('genres', values);
+    formData.append('author', author);
 
     fetch('/upload_book', {
       method: 'POST',

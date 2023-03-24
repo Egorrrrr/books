@@ -1,0 +1,95 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bootstrap User Settings</title>
+  <style>
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+  <h2>User Settings</h2>
+  <form id="user-settings-form" action="/changeSettings" method="post">
+    <div class="form-group">
+      <label for="profile-pic">Profile Picture:</label>
+      <img id="profile-pic" class="profile-pic" th:src="${user.pfp}">
+      <input  type="file" id="profile-pic-input" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label for="name">Name:</label><br>
+      <input name="name" th:value="${user.name}" type="text" class="form-control" id="name">
+      <span id="name-error" class="error"></span>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label><br>
+      <input name="email" th:value="${user.email}" type="email" class="form-control" id="email">
+      <span id="email-error" class="error"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<script>
+        var file = null
+        $(document).ready(function() {
+            var init_email = $("#email").val()
+            var init_name = $("#name").val()
+            $("#profile-pic").click(function() {
+                $("#profile-pic-input").click();
+            });
+
+            $("#profile-pic-input").change(function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#profile-pic").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+                file = this.files[0];
+            });
+
+            $("#user-settings-form").submit(function(e) {
+                e.preventDefault();
+
+                var isValid = true;
+
+                if ($("#name").val().length < 2 || $("#name").val() == init_name) {
+                    isValid = false;
+                    $("#name-error").text("Имя должно быть длинее 2 символов и не должно быть таким же");
+                } else {
+                    $("#name-error").text("");
+                }
+
+                if ($("#email").val() == "" || $("#email").val() == init_email) {
+                    isValid = false;
+                    $("#email-error").text("Email не должит быть пустым или таким же");
+                } else {
+                    $("#email-error").text("");
+                }
+                if (isValid) {
+                  let formData = new FormData();
+                  formData.append('file', file);
+                  formData.append('name', $("#name").val());
+                  formData.append('email', $("#email").val());
+
+
+                  fetch('/changeSettings', {
+                    method: 'POST',
+                    body: formData
+                  })
+                    .then(response => response)
+                    .then(result => {
+                      window.location.href = "/settings"
+                    })
+                    .catch(error => console.error(error));
+                  }
+            });
+        });
+    </script>
+</body>
+</html>

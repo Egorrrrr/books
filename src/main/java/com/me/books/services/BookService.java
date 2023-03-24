@@ -34,7 +34,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.sun.xml.bind.v2.util.EditDistance.editDistance;
 
 @Service
 public class BookService {
@@ -45,6 +49,7 @@ public class BookService {
     @Autowired
     FileService fileService;
     private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    private static final String CHAPTER_PATTERN = "<title>";
 
     public List<Genre> getGenres() {
 
@@ -52,43 +57,40 @@ public class BookService {
     }
 
     public String addBook(Book book, User user) throws ParserConfigurationException, IOException, SAXException{
-        DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-        Document doc = dBuilder.parse(book.getFile().getInputStream());
-        NodeList chapters = doc.getElementsByTagName("section");
-        NodeList titles = doc.getElementsByTagName("title").getLength() == 0 ? doc.getElementsByTagName("strong") : doc.getElementsByTagName("title") ;
+        List<String> chapters = splitBookIntoChapters(new String(book.getFile().getBytes(), StandardCharsets.UTF_8));
         book.setPath(String.format("%s/%s/%s", FileService.BOOK_STORAGE, user.getId(), book.getName()));
         book.setSize(book.getFile().getSize());
         book.setUploader(user);
         int i;
-        int j = 0;
-        for (i = 0; i < chapters.getLength(); i++) {
-            Node node = chapters.item(i);
-            String chapter = titles.item(i).getTextContent();
-            String stringContent = innerXml(chapter, node);
-            if(i != chapters.getLength()-1){
-                if(stringContent.startsWith(innerXml(chapter,chapters.item(i+1)))){
-
-
-                }
-            }
-            byte[] content = innerXml(chapter, node).getBytes(StandardCharsets.UTF_8);
-            if()
-            if(content.length < book.getSize() * 0.15){
-                fileService.uploadBook(user.getId(), book.getName(), j, content);
-                j++;
-            }
+        for(i = 0; i < chapters.size(); i++ ){
+            fileService.uploadBook(user.getId(), book.getName(), i, chapters.get(i).getBytes(StandardCharsets.UTF_8));
         }
-        book.setChapterCount(j);
+        book.setChapterCount(i);
         bookRepository.save(book);
+
         return "";
     }
+    public static List<String> splitBookIntoChapters(String fileContent) throws IOException {
+        StringBuilder currentChapter = new StringBuilder();
 
+
+
+        String[] chapterContentArray = fileContent.split(CHAPTER_PATTERN);
+        List<String> chapters = Arrays.stream(chapterContentArray).toList();
+
+        return chapters;
+    }
     public Book getBookById(long id) {
         return bookRepository.getReferenceById(id);
     }
 
     public List<Book> getBooksByGenre(Genre genre) {
         return bookRepository.findByGenres(genre);
+
+    }
+
+    public List<Book> searchBooksByName(String name) {
+        return bookRepository.findByNameContaining(name);
 
     }
 
@@ -103,8 +105,7 @@ public class BookService {
     public Chapter getChapter(Book book, int chapterId) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder dBuilder = dbf.newDocumentBuilder();
         String chapterXml = fileService.loadChapter(chapterId, book.getPath());
-        String title = chapterXml.split("\n")[0];
-        Chapter chapter = new Chapter(title, chapterXml, chapterId);
+        Chapter chapter = new Chapter("А", chapterXml, chapterId);
         return chapter;
     }
 

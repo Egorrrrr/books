@@ -12,6 +12,7 @@
             <div class="card-body">
               <a th:href="@{'book/'+${book.id}}"><h5 class="card-title" th:text="${book.name}"></h5></a>
               <p class="card-text" th:text="${book.description}"></p>
+              <p class="card-text" th:text="${book.author}"></p>
             </div>
           </div>
         </div>

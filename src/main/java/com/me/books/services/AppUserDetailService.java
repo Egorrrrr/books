@@ -9,16 +9,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public class AppUserDetailService implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Autowired
-    private MessageService messageService;
+    MessageService messageService;
+    @Autowired
+    FileService fileService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
+
         if (user == null) {
             throw new UsernameNotFoundException("User doesn't exist");
         }
@@ -30,6 +36,14 @@ public class AppUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("User doesn't exist");
         }
         return user;
+    }
+    public String updateUserData(User user, String email, String name, MultipartFile file) throws IOException {
+
+        user.setPfp(fileService.uploadPicture(file,user));
+        user.setEmail(email);
+        user.setName(name);
+        userRepository.save(user);
+        return "success";
     }
 
     public String makeNewUser(String username, String name, String email, String password) {

@@ -13,6 +13,8 @@ public class Book {
 
     private String name;
 
+    private String author;
+
     private String path;
 
     @Transient
@@ -98,6 +100,14 @@ public class Book {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public int getChapterCount() {

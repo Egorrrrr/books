@@ -36,11 +36,6 @@ public class BookController {
     public String viewBook(@PathVariable("id") Book book, Model model){
         model.addAttribute("book", bookService.getBookById(book.getId()));
         model.addAttribute("comments", commentService.getCommentsByBook(book));
-        User user = authService.getUserFromAuth();
-        if(user != null){
-            model.addAttribute("logged_in", true);
-            model.addAttribute("user", user);
-        }
         return "book";
     }
 
@@ -53,11 +48,6 @@ public class BookController {
             model.addAttribute("p_link", String.format("/read/%s/%s", id, chapter-1));
         if(chapter + 1 < book.getChapterCount())
             model.addAttribute("n_link", String.format("/read/%s/%s", id, chapter+1 ));
-        User user =authService.getUserFromAuth();
-        if(user != null){
-            model.addAttribute("logged_in", true);
-            model.addAttribute("user", user);
-        }
         return "read";
     }
 

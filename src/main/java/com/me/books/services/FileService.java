@@ -1,6 +1,8 @@
 package com.me.books.services;
 
+import com.me.books.entities.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,4 +40,16 @@ public class FileService {
 
 
     }
+
+    public String uploadPicture(MultipartFile multipartFile, User user) throws IOException {
+        Files.write(Path.of(new StringBuilder(PIC_STORAGE).append("/").append(String.valueOf(user.getId())).toString()),
+                multipartFile.getBytes());
+        return new StringBuilder("/pics/").append(user.getId()).toString();
+    }
+
+    public byte[] getPfp(String path) throws IOException {
+
+        return Files.readAllBytes(Path.of(String.format("%s/%s", PIC_STORAGE, path)));
+    }
+
 }
